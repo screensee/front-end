@@ -1,7 +1,42 @@
+@font-face {
+  font-family: 'josefinsans-bold';
+  src: local('josefinsans-bold'), url(./fonts/josefinsans-bold.woff) format('woff');
+}
+
+@font-face {
+  font-family: 'josefinsans-semibold';
+  src: local('josefinsans-semibold'), url(./fonts/josefinsans-semibold.woff) format('woff');
+}
+
+@font-face {
+  font-family: 'josefinsans-italic';
+  src: local('josefinsans-italic'), url(./fonts/josefinsans-italic.woff) format('woff');
+}
+
+@font-face {
+  font-family: 'josefinsans-regular';
+  src: local('josefinsans-regular'), url(./fonts/josefinsans-regular.woff) format('woff');
+}
+
+@font-face {
+  font-family: 'josefinsans-light';
+  src: local('josefinsans-light'), url(./fonts/josefinsans-light.woff) format('woff');
+}
+
+@font-face {
+  font-family: 'josefinsans-thin';
+  src: local('josefinsans-thin'), url(./fonts/josefinsans-thin.woff) format('woff');
+}
+
+* {
+  box-sizing: border-box;
+}
+
+
 body {
   margin: 0;
   padding: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+  font-family: "JosefinSans-Regular", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -11,4 +46,8 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
+}
+
+a {
+  text-decoration: none;
 }

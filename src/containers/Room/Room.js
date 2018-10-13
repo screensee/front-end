@@ -1,9 +1,11 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import styled from 'styled-components'
 import SettingsBar from '../../components/SettingsBar';
 import UserIcon from '../../components/UserIcon';
 import Chat from '../Chat';
 import Video from '../../components/Video';
+import roomMqtt from '../../mqtt/room';
+import makeRequest, { createUrl } from '../../utils/request';
 
 const RoomWrapper = styled.div`
   background-color: #333;
@@ -42,51 +44,49 @@ const MoreUsers = styled.span`
   border: 2px solid black;
 `;
 
-// eslint-disable-next-line
-const Video111 = styled.iframe`
-  position: absolute;
-  top: calc(50% + 40px);
-  left: 50%;
-  width: 70vw;
-  height: calc(70vw / 16 * 9);
-  max-height: 560px;
-  max-width: 995px;
-  min-width: 768px;
-  min-height: 432px;
-  transform: translate(-50%, -50%);
-`;
-
-class Room extends Component {
+class Room extends PureComponent {
   constructor() {
     super();
     this.state = {
       videoId: '',
     }
+
+    makeRequest('post')(createUrl.roomCreate())()()
+      .then((response) => {
+        if (response) {
+          roomMqtt.initRoom(response.id);
+          roomMqtt.addCallback('message', this.onMessage);
+        }
+      });
+  }
+
+  onMessage = (message) => {
+    console.log(message);
   }
 
   changeVideo = (id) => {
     console.log(id);
-    this.setState({ videoId: id});
+    this.setState({ videoId: id });
   };
 
   render() {
-    const {videoId} = this.state;
+    const { videoId } = this.state;
     return (
       <RoomWrapper>
         <UserSidebar>
-          <StyledUserIcon name="roman" img=""/>
-          <StyledUserIcon name="yurii" img=""/>
-          <StyledUserIcon name="david" img=""/>
-          <StyledUserIcon name="antony" img=""/>
-          <StyledUserIcon name="dmitri" img=""/>
-          <StyledUserIcon name="andrew" img=""/>
-          <StyledUserIcon name="roman" img=""/>
+          <StyledUserIcon name="roman" img="" />
+          <StyledUserIcon name="yurii" img="" />
+          <StyledUserIcon name="david" img="" />
+          <StyledUserIcon name="antony" img="" />
+          <StyledUserIcon name="dmitri" img="" />
+          <StyledUserIcon name="andrew" img="" />
+          <StyledUserIcon name="roman" img="" />
           <MoreUsers>...</MoreUsers>
         </UserSidebar>
         <Chat />
         <SettingsBar changeVideo={this.changeVideo} />
-        { 
-          videoId !== '' && 
+        {
+          videoId !== '' &&
           // <Video title="vid" width="560" height="315"
           //                                     src={`https://www.youtube.com/embed/${this.state.videoId}?rel=0&amp;controls=0&amp;showinfo=0`}
           //                                     frameBorder="0"

@@ -9,7 +9,7 @@ const SettingsBarWrapper = styled.div`
   justify-content: center;
   flex-direction: column;
   position: absolute;
-  bottom: 10%;
+  bottom: 5%;
   right: 0;
   height: 150px;
   width: 200px;
@@ -36,6 +36,7 @@ const SettingsInput = styled.input`
   margin-bottom: 10px;
   text-align: center;
   font-family: "josefinsans-semibold", sans-serif;
+  outline: none ;
 `;
 
 const VisibleIcon = styled.div`
@@ -64,6 +65,11 @@ class SettingsBar extends Component {
 
   toggleExpand = () => this.setState({ expanded: !this.state.expanded });
 
+  submitLink = () => {
+    this.props.changeVideo(this.videoInput.value);
+    this.toggleExpand();
+  };
+
   render() {
     return (
       <SettingsBarWrapper expanded={this.state.expanded}>
@@ -71,7 +77,7 @@ class SettingsBar extends Component {
           <img src={SettingsIcon} alt=""/>
         </VisibleIcon>
         <SettingsInput innerRef={(ref) => this.videoInput = ref} placeholder="insert video link" />
-        <Button onClick={() => this.props.changeVideo(this.videoInput.value)}>Set Video</Button>
+        <Button onClick={this.submitLink}>Set Video</Button>
       </SettingsBarWrapper>
     );
   }

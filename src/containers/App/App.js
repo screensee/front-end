@@ -47,7 +47,7 @@ const Logo = styled.div`
   color: black;
   
   span {
-    color: #3379fc;
+    color: blue;
   }
 `;
 

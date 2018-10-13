@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import styled, { css } from 'styled-components'
 import ChatIcon from '../../assets/dialogue.svg';
+import UserIcon from "../../components/UserIcon";
 
 const ChatWrapper = styled.div`
   display: flex;
@@ -8,7 +9,7 @@ const ChatWrapper = styled.div`
   justify-content: center;
   flex-direction: column;
   position: absolute;
-  top: 50%;
+  top: calc(50% + 40px);
   right: 0;
   height: 350px;
   width: 250px;
@@ -44,6 +45,40 @@ const VisibleIcon = styled.div`
   }
 `;
 
+const MessagesWrap = styled.div`
+  flex-grow: 1;
+  overflow: auto;
+  padding: 10px 10px 0;
+  display: flex;
+  flex-direction: column;
+`;
+
+const SingleMessage = styled.div`
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 15px;
+  width: 100%;
+  flex-shrink: 0;
+`;
+
+const Message = styled.div`
+  color: black;
+  text-align: left;
+  margin-left: 10px;
+  margin-top: 3px;
+`;
+
+const InputWrap = styled.textarea`
+  width: 100%;
+  border: 0;
+  border-top: 2px solid black;
+  height: 70px;
+  outline: none;
+  padding: 5px 7px;
+  resize: none;
+  font-family: "josefinsans-semibold", sans-serif;
+`;
+
 class Chat extends Component {
   constructor() {
     super();
@@ -60,6 +95,25 @@ class Chat extends Component {
         <VisibleIcon onClick={this.toggleExpand}>
           <img src={ChatIcon} alt=""/>
         </VisibleIcon>
+        <MessagesWrap>
+          <SingleMessage>
+            <UserIcon fromChat name="Broman"/>
+            <Message>Some absolutely random message</Message>
+          </SingleMessage>
+          <SingleMessage>
+            <UserIcon fromChat name="Yurii"/>
+            <Message>Some absolutely random message but a bit longer</Message>
+          </SingleMessage>
+          <SingleMessage>
+            <UserIcon fromChat name="David"/>
+            <Message>Some absolutely random message but really really really really really really really really long message </Message>
+          </SingleMessage>
+          <SingleMessage>
+            <UserIcon fromChat name="Roman"/>
+            <Message>And again some absolutely random message</Message>
+          </SingleMessage>
+        </MessagesWrap>
+        <InputWrap />
       </ChatWrapper>
     );
   }

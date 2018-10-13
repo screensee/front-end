@@ -17,6 +17,28 @@ const RoomWrapper = styled.div`
 
 const UserSidebar = styled.div`
   display: block;
+  position: absolute;
+  left: 10px;
+  top: calc(50% + 40px);
+  transform: translate(0, -50%);
+`;
+
+const StyledUserIcon = styled(UserIcon)`
+  margin-bottom: 15px;
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+`;
+
+const MoreUsers = styled.span`
+  display: block;
+  color: black;
+  background-color: red;
+  font-size: 26px;
+  width: 34px;
+  height: 34px;
+  border: 2px solid black;
 `;
 
 const Video = styled.iframe`
@@ -49,7 +71,14 @@ class Room extends Component {
     return (
       <RoomWrapper>
         <UserSidebar>
-          <UserIcon name="roman" img=""/>
+          <StyledUserIcon name="roman" img=""/>
+          <StyledUserIcon name="yurii" img=""/>
+          <StyledUserIcon name="david" img=""/>
+          <StyledUserIcon name="antony" img=""/>
+          <StyledUserIcon name="dmitri" img=""/>
+          <StyledUserIcon name="andrew" img=""/>
+          <StyledUserIcon name="roman" img=""/>
+          <MoreUsers>...</MoreUsers>
         </UserSidebar>
         <Chat />
         <SettingsBar changeVideo={this.changeVideo} />

@@ -37,7 +37,7 @@ const AppHeader = styled.header`
   width: 100%;
   padding: 20px 50px;
   box-shadow: 0 0 20px 3px rgba(0,0,0,.45);
-  z-index: 2;
+  z-index: 5;
 `;
 
 const Logo = styled.div`

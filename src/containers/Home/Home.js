@@ -133,14 +133,81 @@ const HomeInput = styled.input`
 `;
 
 const StyledButton = styled(Button)`
-  && {
-    width: 420px;
-    margin-top: 10px;
-  }
+  width: 420px;
+  margin-top: 10px;
+`;
+
+const StyledModalButton = styled(Button)`
+  margin-top: 30px;
+`;
+
+const Modal = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  z-index: 4;
+`;
+
+const ModalBg = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, .45);
+  z-index: 1;
+`;
+
+const ModalContent = styled.div`
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  border: 4px solid black;
+  background-color: white;
+  width: 350px;
+  height: 240px;
+  z-index: 2;
+`;
+
+const ModalInput = styled.input`
+  border: 4px solid black;
+  width: 200px;
+  height: 40px;
+  font-family: "josefinsans-semibold", sans-serif;
+  margin-top: 10px;
+  padding: 0 5px;
+  outline: none;
+  text-align: center;
+`;
+
+const ModalTitle = styled.span`
+    font-size: 32px;
+    font-family: "josefinsans-regular",sans-serif;
 `;
 
 class Home extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      createModal: false,
+      connectModal: false,
+    }
+  }
+
+  toggleConnectModal = () => this.connectInput.value ? this.setState({ connectModal: !this.state.connectModal }) : false;
+
+  toggleCreateModal = () => this.setState({ createModal: !this.state.createModal });
+
   render() {
+    const { createModal, connectModal } = this.state;
+
     return (
       <HomeWrapper>
         <IconBg>
@@ -157,12 +224,33 @@ class Home extends Component {
             <HomeSubTitle>become smarter and have fun</HomeSubTitle>
           </TitleWrapper>
           <InputWrap>
-            <HomeInput placeholder="insert room id or click create room" />
-            <Button>Connect</Button>
-            <StyledButton>Create room</StyledButton>
+            <HomeInput innerRef={(ref) => this.connectInput = ref } placeholder="insert room id or click create room" />
+            <Button onClick={this.toggleConnectModal}>Connect</Button>
+            <StyledButton onClick={this.toggleCreateModal}>Create room</StyledButton>
           </InputWrap>
         </HomeLayout>
-
+        {createModal &&
+          <Modal>
+            <ModalBg onClick={this.toggleCreateModal} />
+            <ModalContent>
+              <ModalTitle>Create form:</ModalTitle>
+              <ModalInput placeholder="your name" />
+              <ModalInput placeholder="create password" />
+              <StyledModalButton>Create</StyledModalButton>
+            </ModalContent>
+          </Modal>
+        }
+        {connectModal && this.connectInput.value &&
+          <Modal>
+            <ModalBg onClick={this.toggleConnectModal} />
+            <ModalContent>
+              <ModalTitle>Connect form:</ModalTitle>
+              <ModalInput placeholder="your name" />
+              <ModalInput placeholder="enter password" />
+              <StyledModalButton>Connect</StyledModalButton>
+            </ModalContent>
+          </Modal>
+        }
       </HomeWrapper>
     );
   }

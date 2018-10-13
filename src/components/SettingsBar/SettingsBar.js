@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import styled, { css } from 'styled-components'
+import queryString from 'query-string';
 import Button from "../Button";
 import SettingsIcon from "../../assets/settings.svg";
 
@@ -56,8 +57,8 @@ const VisibleIcon = styled.div`
 `;
 
 class SettingsBar extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       expanded: false,
     }
@@ -65,9 +66,25 @@ class SettingsBar extends Component {
 
   toggleExpand = () => this.setState({ expanded: !this.state.expanded });
 
-  submitLink = () => {
-    this.props.changeVideo(this.videoInput.value);
-    this.toggleExpand();
+  onInputeRef = (ref) => {
+    this.videoInput = ref;
+  };
+
+  onClick = () => {
+    if (this.videoInput) {
+      const {value} = this.videoInput;
+      const splitted = value.split('?');
+      if (splitted.length > 1) {
+        const params = queryString.parse(splitted[1]);
+        if (params.v) {
+          this.props.changeVideo(params.v)
+          this.toggleExpand();
+        }
+      } else {
+        this.props.changeVideo(value); // assume that this is video id
+        this.toggleExpand();
+      }
+    }
   };
 
   render() {
@@ -76,8 +93,8 @@ class SettingsBar extends Component {
         <VisibleIcon onClick={this.toggleExpand}>
           <img src={SettingsIcon} alt=""/>
         </VisibleIcon>
-        <SettingsInput innerRef={(ref) => this.videoInput = ref} placeholder="insert video link" />
-        <Button onClick={this.submitLink}>Set Video</Button>
+        <SettingsInput innerRef={this.onInputeRef} placeholder="insert video link"  defaultValue="https://www.youtube.com/watch?v=xBaiNoXOZOo"/>
+        <Button onClick={this.onClick}>Set Video</Button>
       </SettingsBarWrapper>
     );
   }

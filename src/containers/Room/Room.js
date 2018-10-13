@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
+import styled from 'styled-components'
 import SettingsBar from '../../components/SettingsBar';
 import UserIcon from '../../components/UserIcon';
 import Chat from '../Chat';
-import styled from 'styled-components'
+import Video from '../../components/Video';
 
 const RoomWrapper = styled.div`
   background-color: #333;
@@ -41,7 +42,7 @@ const MoreUsers = styled.span`
   border: 2px solid black;
 `;
 
-const Video = styled.iframe`
+const Video111 = styled.iframe`
   position: absolute;
   top: calc(50% + 40px);
   left: 50%;
@@ -68,6 +69,7 @@ class Room extends Component {
   };
 
   render() {
+    const {videoId} = this.state;
     return (
       <RoomWrapper>
         <UserSidebar>
@@ -82,11 +84,15 @@ class Room extends Component {
         </UserSidebar>
         <Chat />
         <SettingsBar changeVideo={this.changeVideo} />
-        { this.state.videoId !== '' && <Video title="vid" width="560" height="315"
-                                              src={`https://www.youtube.com/embed/${this.state.videoId}?rel=0&amp;controls=0&amp;showinfo=0`}
-                                              frameBorder="0"
-                                              allow="autoplay; encrypted-media"
-                                              allowFullScreen />}
+        { 
+          videoId !== '' && 
+          // <Video title="vid" width="560" height="315"
+          //                                     src={`https://www.youtube.com/embed/${this.state.videoId}?rel=0&amp;controls=0&amp;showinfo=0`}
+          //                                     frameBorder="0"
+          //                                     allow="autoplay; encrypted-media"
+          //                                     allowFullScreen />
+          <Video videoId={videoId} />
+        }
 
       </RoomWrapper>
     );

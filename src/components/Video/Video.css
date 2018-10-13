@@ -1,0 +1,12 @@
+iframe#player {
+  position: absolute;
+  top: calc(50% + 40px);
+  left: 50%;
+  width: 70vw;
+  height: calc(70vw / 16 * 9);
+  max-height: 560px;
+  max-width: 995px;
+  min-width: 768px;
+  min-height: 432px;
+  transform: translate(-50%, -50%);
+}

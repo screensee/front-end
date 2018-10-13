@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+import styled from 'styled-components';
 import Home from '../Home';
 import Room from '../Room';
 import Button from '../../components/Button';
-import styled from 'styled-components';
+import '../../mqtt';
+import makeRequest, { createUrl } from '../../utils/request';
 
 const AppWrapper = styled.div`
   position: fixed;
@@ -66,6 +68,12 @@ const StyledLink = styled(Link)`
 `;
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    console.log(createUrl);
+    makeRequest('get')(createUrl.userInit())()();
+  }
+
   render() {
     return (
       <Router>

@@ -1,22 +1,12 @@
 import client from './index';
 
-const callbacks = {};
+let callbacks = {};
 let roomId;
 
 export default {
   initRoom: (id) => {
     roomId = id
-    client.on(`room/${roomId}/#`, (topic, messageBuffer) => {
-      let message = messageBuffer.toString();
-      if (message[0] === '{') {
-        message = JSON.parse(message);
-      }
-      if (callbacks[topic]) {
-        callbacks[topic].forEach((cb) => {
-          cb(message, topic);
-        })
-      }
-    });
+    client.on(`room/${roomId}/#`, onRoomMessage);
   },
   addCallback: (subTopic, cb) => {
     const topic = `room/${roomId}/${subTopic}`;
@@ -25,4 +15,20 @@ export default {
     }
     callbacks[topic].push(cb);
   },
+  destroyRoom: (id) => {
+    callbacks = {};
+    client.removeListener(`room/${roomId}/#`, onRoomMessage);
+  }
+}
+
+function onRoomMessage(topic, messageBuffer) {
+  let message = messageBuffer.toString();
+  if (message[0] === '{') {
+    message = JSON.parse(message);
+  }
+  if (callbacks[topic]) {
+    callbacks[topic].forEach((cb) => {
+      cb(message, topic);
+    })
+  }
 }

@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+import { Router, Route, Link } from 'react-router-dom';
 import styled from 'styled-components';
 import Home from '../Home';
 import Room from '../Room';
 import Button from '../../components/Button';
-import '../../mqtt';
 import makeRequest, { createUrl } from '../../utils/request';
+import history from '../../utils/history';
+import '../../mqtt'; // init mqtt
 
 const AppWrapper = styled.div`
   position: fixed;
@@ -70,32 +71,64 @@ const StyledLink = styled(Link)`
 class App extends Component {
   constructor(props) {
     super(props);
-    console.log(createUrl);
-    makeRequest('get')(createUrl.userInit())()();
+
+    this.state = {
+      room: null,
+    }
   }
 
+  onCreateRoom = () => {
+    makeRequest('post')(createUrl.roomCreate())()
+      .then((response) => {
+        if (response) {
+          console.log(this);
+          console.log(response);
+          this.setState({
+            room: response,
+          }, () => {
+            history.push(`/room/${response.id}`);
+          })
+        }
+      });
+  };
+
+  onConnectRoom = () => {
+
+  };
+
   render() {
+    const { roomId } = this.state;
+
     return (
-      <Router>
-      <AppWrapper>
-        <AppHeader>
-          <LogoLink to="/">
-            <Logo>Screen<span>See</span></Logo>
-          </LogoLink>
-          <AppHeadRight>
-            <StyledLink to="/">
-              <Button>Home</Button>
-            </StyledLink>
-            <Link to="/room">
-              <Button>Room</Button>
-            </Link>
-          </AppHeadRight>
-        </AppHeader>
-        <AppMain>
-          <Route exact path="/" component={Home} />
-          <Route exact path="/room" component={Room} />
-        </AppMain>
-      </AppWrapper>
+      <Router history={history}>
+        <AppWrapper>
+          <AppHeader>
+            <LogoLink to="/">
+              <Logo>Screen<span>See</span></Logo>
+            </LogoLink>
+            <AppHeadRight>
+              <StyledLink to="/">
+                <Button>Home</Button>
+              </StyledLink>
+              <Link to="/room">
+                <Button>Room</Button>
+              </Link>
+            </AppHeadRight>
+          </AppHeader>
+          <AppMain>
+            <Route
+              exact
+              path="/"
+              render={() =>
+                <Home
+                  onCreateRoom={this.onCreateRoom}
+                  onConnectRoom={this.onConnectRoom}
+                />
+              }
+            />
+            <Route exact path="/room/:id" render={(props) => <Room room={this.state.room} id={props.match.params.id} />} />
+          </AppMain>
+        </AppWrapper>
       </Router>
     );
   }

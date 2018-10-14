@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
+import PropTypes from 'prop-types';
 import styled, { keyframes } from 'styled-components'
 import Button from '../../components/Button';
 import visibility from '../../assets/visibility.svg';
@@ -139,27 +140,32 @@ const StyledButton = styled(Button)`
   }
 `;
 
-class Home extends Component {
+class Home extends PureComponent {
+  static propTypes = {
+    onCreateRoom: PropTypes.func.isRequired,
+    onConnectRoom: PropTypes.func.isRequired,
+  }
+
   render() {
     return (
       <HomeWrapper>
         <IconBg>
-          <img src={videoPlayer} alt=""/>
-          <img src={dialogue} alt=""/>
-          <img src={dialogue} alt=""/>
-          <img src={question} alt=""/>
-          <img src={question} alt=""/>
+          <img src={videoPlayer} alt="" />
+          <img src={dialogue} alt="" />
+          <img src={dialogue} alt="" />
+          <img src={question} alt="" />
+          <img src={question} alt="" />
         </IconBg>
         <HomeLayout>
           <TitleWrapper>
-            <img src={visibility} alt=""/>
+            <img src={visibility} alt="" />
             <HomeTitle>Share, Learn, Chat</HomeTitle>
             <HomeSubTitle>become smarter and have fun</HomeSubTitle>
           </TitleWrapper>
           <InputWrap>
             <HomeInput placeholder="insert room id or click create room" />
-            <Button>Connect</Button>
-            <StyledButton>Create room</StyledButton>
+            <Button onClick={this.props.onConnectRoom}>Connect</Button>
+            <StyledButton onClick={this.props.onCreateRoom}>Create room</StyledButton>
           </InputWrap>
         </HomeLayout>
 

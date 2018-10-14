@@ -1,5 +1,7 @@
 import React, { PureComponent } from 'react';
 import styled from 'styled-components'
+import PropTypes from 'prop-types';
+import _ from 'lodash';
 import SettingsBar from '../../components/SettingsBar';
 import UserIcon from '../../components/UserIcon';
 import Chat from '../Chat';
@@ -45,23 +47,81 @@ const MoreUsers = styled.span`
 `;
 
 class Room extends PureComponent {
+  static propTypes = {
+    room: PropTypes.object,
+    id: PropTypes.string.isRequired,
+  }
+
+  static defaultProps = {
+    room: null,
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    let result = null;
+    if (nextProps.room && !_.isEqual(nextProps.room, prevState.room)) {
+      result = {
+        room: nextProps.room,
+      };
+    }
+    return result;
+  }
+
   constructor() {
     super();
     this.state = {
       videoId: '',
-    }
-    
-    makeRequest('post')(createUrl.roomCreate())()()
-      .then((response) => {
-        if (response) {
-          roomMqtt.initRoom(response.id);
-          roomMqtt.addCallback('message', this.onMessage);
-        }
-      });
+      room: null,
+      messages: [],
+    };
+    this.sendMessage = makeRequest('post')(createUrl.postMess());
   }
 
-  onMessage = (message) => {
+  componentDidMount() {
+    if (!this.props.room && this.props.id) {
+      makeRequest('post')(createUrl.roomJoin(this.props.id))()
+        .then((room) => {
+
+          this.setState({
+            room,
+          });
+        });
+        makeRequest('get')(createUrl.messGet(this.props.id))()
+        .then((messages) => {
+          this.setState({
+            messages,
+          });
+        })
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    console.log(prevState.room, this.state.room);
+    if (!_.isEqual(prevState.room, this.state.room)) {
+      roomMqtt.destroyRoom(this.state.room.id)
+      roomMqtt.initRoom(this.state.room.id);
+      roomMqtt.addCallback('message', this.onRemoteMessage);
+    }
+  }
+
+  onRemoteMessage = (message) => {
     console.log(message);
+    this.setState((state) => ({
+      messages: [
+        ...state.messages,
+        message,
+      ]
+    }))
+  }
+
+  onSendMessage = (text) => {
+    this.sendMessage({
+      roomId: this.state.room.id,
+      text,
+    }).then((messages) => {
+      this.setState({
+        messages,
+      })
+    });
   }
 
   changeVideo = (id) => {
@@ -69,21 +129,24 @@ class Room extends PureComponent {
     this.setState({ videoId: id });
   };
 
+  renderUserIcons = () => {
+    let toRender = null;
+    if (this.state.room) {
+      const { participants } = this.state.room;
+      toRender = participants.map((elem) => <StyledUserIcon name={elem} key={elem} img="" />);
+    }
+    return toRender;
+  };
+
   render() {
     const { videoId } = this.state;
     return (
       <RoomWrapper>
         <UserSidebar>
-          <StyledUserIcon name="roman" img="" />
-          <StyledUserIcon name="yurii" img="" />
-          <StyledUserIcon name="david" img="" />
-          <StyledUserIcon name="antony" img="" />
-          <StyledUserIcon name="dmitri" img="" />
-          <StyledUserIcon name="andrew" img="" />
-          <StyledUserIcon name="roman" img="" />
+          {this.renderUserIcons()}
           <MoreUsers>...</MoreUsers>
         </UserSidebar>
-        <Chat />
+        <Chat onSendMessage={this.onSendMessage} messages={this.state.messages} />
         <SettingsBar changeVideo={this.changeVideo} />
         {
           videoId !== '' &&

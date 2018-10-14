@@ -201,8 +201,12 @@ const ModalContent = styled.div`
   border: 4px solid black;
   background-color: white;
   width: 350px;
-  height: 240px;
+  height: 200px;
   z-index: 2;
+`;
+
+const CreateModalContent = styled(ModalContent)`
+  height: 300px;
 `;
 
 const ModalInput = styled.input`
@@ -265,12 +269,13 @@ class Home extends PureComponent {
         {createModal &&
           <Modal>
             <ModalBg onClick={this.toggleCreateModal} />
-            <ModalContent>
+            <CreateModalContent>
               <ModalTitle>Create form:</ModalTitle>
               <ModalInput placeholder="your name" />
-              <ModalInput placeholder="create password" />
+              <ModalInput placeholder="room name" />
+              <ModalInput placeholder="youtube link" />
               <StyledModalButton onClick={this.props.onCreateRoom}>Create</StyledModalButton>
-            </ModalContent>
+            </CreateModalContent>
           </Modal>
         }
         {connectModal && this.connectInput.value &&
@@ -279,7 +284,6 @@ class Home extends PureComponent {
             <ModalContent>
               <ModalTitle>Connect form:</ModalTitle>
               <ModalInput placeholder="your name" />
-              <ModalInput placeholder="enter password" />
               <StyledModalButton onClick={() => this.props.onConnectRoom(this.connectInput.value)}>Connect</StyledModalButton>
             </ModalContent>
           </Modal>

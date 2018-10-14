@@ -57,6 +57,7 @@ const MessagesWrap = styled.div`
   padding: 10px 10px 0;
   display: flex;
   flex-direction: column;
+  width: 100%;
 `;
 
 const SingleMessage = styled.div`
@@ -83,6 +84,7 @@ const InputWrap = styled.textarea`
   padding: 5px 7px;
   resize: none;
   font-family: "josefinsans-semibold", sans-serif;
+  flex-shrink: 0;
 `;
 
 class Chat extends Component {
@@ -108,6 +110,11 @@ class Chat extends Component {
   onInputKey = (event) => {
     if (event.key === 'Enter') {
       this.props.onSendMessage(this.inputRef.value);
+    }
+  };
+
+  onInputClear = (event) => {
+    if (event.key === 'Enter') {
       this.inputRef.value = '';
     }
   };
@@ -131,7 +138,7 @@ class Chat extends Component {
         <MessagesWrap>
           {this.renderMessages()}
         </MessagesWrap>
-        <InputWrap innerRef={this.onInputRef} onKeyDown={this.onInputKey} />
+        <InputWrap innerRef={this.onInputRef} onKeyDown={this.onInputKey} onKeyUp={this.onInputClear} />
       </ChatWrapper>
     );
   }

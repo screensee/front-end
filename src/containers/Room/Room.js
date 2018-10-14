@@ -60,7 +60,7 @@ class Room extends PureComponent {
 
   static getDerivedStateFromProps(nextProps, prevState) {
     let result = null;
-    if (nextProps.room && !_.isEqual(nextProps.room, prevState.room)) {
+    if (nextProps.room && _.get(nextProps.room, 'id') !== _.get(prevState.room, 'id')) {
       result = {
         room: nextProps.room,
       };
@@ -100,7 +100,7 @@ class Room extends PureComponent {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (!_.isEqual(prevState.room, this.state.room)) {
+    if (_.get(prevState.room, 'id') !== _.get(this.state.room, 'id')) {
       this.initRoom();
     }
   }
@@ -114,6 +114,8 @@ class Room extends PureComponent {
     const { room } = this.state;
     roomMqtt.initRoom(room.id);
     roomMqtt.addCallback('message', this.onRemoteMessage);
+    roomMqtt.addCallback('userJoin', this.onUserRoomAction(true));
+    roomMqtt.addCallback('userExit', this.onUserRoomAction(false));
     if (room.videoLink) {
       this.changeVideo(room.videoLink);
     }
@@ -142,6 +144,27 @@ class Room extends PureComponent {
       // })
     });
   };
+
+  onUserRoomAction = (isJoin) => (user) => {
+    this.setState((state) => {
+      let newParticipants;
+      if (isJoin) {
+        newParticipants = [...state.room.participants, user];
+      } else {
+        const index = _.findIndex(state.room.participants, user);
+        if (index !== -1) {
+          state.room.participants.splice(index, 1);
+          newParticipants = [...state.room.participants];
+        }
+      }
+      return {
+        room: {
+          ...state.room,
+          participatns: newParticipants,
+        }
+      }
+    });
+  }
 
   changeVideo = (value) => {
     let id;

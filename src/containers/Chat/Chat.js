@@ -82,7 +82,7 @@ const InputWrap = styled.textarea`
 
 class Chat extends Component {
   static propTypes = {
-    onSendMessage: PropTypes.function.isRequired,
+    onSendMessage: PropTypes.func.isRequired,
     messages: PropTypes.array.isRequired,
   };
 
@@ -91,9 +91,21 @@ class Chat extends Component {
     this.state = {
       expanded: false,
     }
+    this.inputRef = null;
   }
 
   toggleExpand = () => this.setState({ expanded: !this.state.expanded });
+
+  onInputRef = (ref) => {
+    this.inputRef = ref;
+  }
+
+  onInputKey = (event) => {
+    if (event.key === 'Enter') {
+      this.props.onSendMessage(this.inputRef.value);
+      this.inputRef.value = '';
+    }
+  }
 
   onSendMessage = () => {
     this.props.onSendMessage();
@@ -118,7 +130,7 @@ class Chat extends Component {
         <MessagesWrap>
           {this.renderMessages()}
         </MessagesWrap>
-        <InputWrap />
+        <InputWrap innerRef={this.onInputRef} onKeyDown={this.onInputKey} />
       </ChatWrapper>
     );
   }

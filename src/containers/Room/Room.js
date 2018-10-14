@@ -73,7 +73,7 @@ class Room extends PureComponent {
       room: null,
       messages: [],
     };
-    this.sendMessage = makeRequest('post')(createUrl.postMess());
+    this.sendMessage = makeRequest('post')(createUrl.messPost());
   }
 
   componentDidMount() {
@@ -95,7 +95,6 @@ class Room extends PureComponent {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    console.log(prevState.room, this.state.room);
     if (!_.isEqual(prevState.room, this.state.room)) {
       roomMqtt.destroyRoom(this.state.room.id)
       roomMqtt.initRoom(this.state.room.id);
@@ -104,7 +103,6 @@ class Room extends PureComponent {
   }
 
   onRemoteMessage = (message) => {
-    console.log(message);
     this.setState((state) => ({
       messages: [
         ...state.messages,
@@ -117,10 +115,10 @@ class Room extends PureComponent {
     this.sendMessage({
       roomId: this.state.room.id,
       text,
-    }).then((messages) => {
-      this.setState({
-        messages,
-      })
+    }).then((message) => {
+      // this.setState({
+      //   messages,
+      // })
     });
   }
 

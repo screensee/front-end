@@ -6,7 +6,8 @@ let roomId;
 export default {
   initRoom: (id) => {
     roomId = id
-    client.on(`room/${roomId}/#`, onRoomMessage);
+    client.subscribe(`room/${roomId}/#`);
+    client.on('message', onRoomMessage);
   },
   addCallback: (subTopic, cb) => {
     const topic = `room/${roomId}/${subTopic}`;
@@ -17,7 +18,8 @@ export default {
   },
   destroyRoom: (id) => {
     callbacks = {};
-    client.removeListener(`room/${roomId}/#`, onRoomMessage);
+    client.subscribe(`room/${roomId}/#`);
+    client.removeListener('message', onRoomMessage);
   }
 }
 

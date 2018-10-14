@@ -34,6 +34,9 @@ export default {
   sendPlaybackInfo: (topic, data) => {
     client.publish(`room/${roomId}/${topic}`, data.toString());
   },
+  // sendMessage: (message) => {
+
+  // }
 }
 
 function onRoomMessage(topic, messageBuffer) {

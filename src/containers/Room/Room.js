@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import styled from 'styled-components'
 import PropTypes from 'prop-types';
 import _ from 'lodash';
+import queryString from 'query-string';
 import SettingsBar from '../../components/SettingsBar';
 import UserIcon from '../../components/UserIcon';
 import Chat from '../Chat';
@@ -83,33 +84,39 @@ class Room extends PureComponent {
     if (!this.props.room && this.props.id) {
       makeRequest('post')(createUrl.roomJoin(this.props.id))()
         .then((room) => {
-
           this.setState({
             room,
           });
+          makeRequest('get')(createUrl.messGet(room.id))()
+            .then((messages) => {
+              this.setState({
+                messages,
+              });
+            })
         });
-      makeRequest('get')(createUrl.messGet(this.props.id))()
-        .then((messages) => {
-          this.setState({
-            messages,
-          });
-        })
     } else if (this.props.room) {
-      roomMqtt.initRoom(this.state.room.id);
-      roomMqtt.addCallback('message', this.onRemoteMessage);
+      this.initRoom();
     }
   }
 
   componentDidUpdate(prevProps, prevState) {
     if (!_.isEqual(prevState.room, this.state.room)) {
-      roomMqtt.initRoom(this.state.room.id);
-      roomMqtt.addCallback('message', this.onRemoteMessage);
+      this.initRoom();
     }
   }
 
   componentWillUnmount() {
     makeRequest('post')(createUrl.exitRoom(this.state.room.id))();
     window.removeEventListener("beforeunload", this.exitRoom, false);
+  }
+
+  initRoom = () => {
+    const { room } = this.state;
+    roomMqtt.initRoom(room.id);
+    roomMqtt.addCallback('message', this.onRemoteMessage);
+    if (room.videoLink) {
+      this.changeVideo(room.videoLink);
+    }
   }
 
   onRemoteMessage = (message) => {
@@ -136,7 +143,18 @@ class Room extends PureComponent {
     });
   };
 
-  changeVideo = (id) => {
+  changeVideo = (value) => {
+    let id;
+    const splitted = value.split('?');
+    if (splitted.length > 1) {
+      const params = queryString.parse(splitted[1]);
+      if (params.v) {
+        id = params.v
+      }
+    } else {
+      id = value;
+    }
+
     this.setState({ videoId: id });
   };
 
@@ -158,7 +176,7 @@ class Room extends PureComponent {
           <MoreUsers>...</MoreUsers>
         </UserSidebar>
         <Chat onSendMessage={this.onSendMessage} messages={this.state.messages} />
-        <SettingsBar changeVideo={this.changeVideo} />
+        <SettingsBar changeVideo={this.changeVideo} defaultUrl={_.get(room, 'videoLink')} />
         {
           videoId !== '' &&
           // <Video title="vid" width="560" height="315"

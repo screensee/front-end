@@ -76,17 +76,33 @@ class App extends Component {
     }
   }
 
-  onCreateRoom = () => {
-    makeRequest('post')(createUrl.roomCreate())()
-      .then((response) => {
-        if (response) {
-          this.setState({
-            room: response,
-          }, () => {
-            history.push(`/room/${response.id}`);
-          })
-        }
-      });
+  onCreateRoom = ({ name, roomName, videoLink }) => {
+    const onRoomSuccess = (response) => {
+      if (response) {
+        this.setState({
+          room: response,
+        }, () => {
+          history.push(`/room/${response.pseudonym || response.id}`);
+        })
+      }
+    };
+
+    if (name) {
+      makeRequest('post')(createUrl.userInit())({ name })
+        .then(() => {
+          makeRequest('post')(createUrl.roomCreate())({
+            pseudonym: roomName,
+            videoLink,
+          }).then(onRoomSuccess);
+        });
+    } else {
+      makeRequest('post')(createUrl.roomCreate())({
+        pseudonym: roomName,
+        videoLink,
+      })
+      .then(onRoomSuccess);
+    }
+
   };
 
   onConnectRoom = (inputValue) => {

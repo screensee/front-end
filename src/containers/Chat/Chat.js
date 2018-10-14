@@ -109,6 +109,7 @@ class Chat extends Component {
 
   onInputKey = (event) => {
     if (event.key === 'Enter') {
+      event.preventDefault();
       this.props.onSendMessage(this.inputRef.value);
     }
   };

@@ -69,7 +69,7 @@ class Video extends PureComponent {
   };
 
   onMasterTime = (time) => {
-    if (!this.props.isMaster && this.player) {
+    if (!this.props.isMaster && this.player && this.player.getCurrentTime) {
       if (Math.abs(this.player.getCurrentTime() - time) > DELTA) {
         this.player.seekTo(time, true);
       }
@@ -77,12 +77,15 @@ class Video extends PureComponent {
   }
 
   onPlayerStateChange = (event) => {
+    console.log(event.data);
     if (this.props.isMaster) {
       if (event.data === 1) {
         roomMqtt.sendPlaybackInfo('play', {});
         this.currentTimeId = window.setInterval(this.sendMasterTime, 1000);
       } else if (event.data === 2) {
         roomMqtt.sendPlaybackInfo('pause', {});
+        window.clearInterval(this.currentTimeId);
+      } else if (event.data === 0) {
         window.clearInterval(this.currentTimeId);
       }
     }

@@ -1,12 +1,27 @@
 import React, { Component } from 'react';
 import styled from 'styled-components'
 
+
 const ButtonWrapper = styled.div`
   position: relative;
-  background-color: white;
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 100%;
+  height: 100%;
+  color: black;
+  font-family: "josefinsans-semibold", sans-serif;
+  text-decoration: none;
+  font-size: ${(props) => props.size ? props.size : 16}px;
+  z-index: 1;
+  cursor: pointer;
+  outline: none;
+  transition: 275ms ease-out;
+`;
+
+const ButtonStyled = styled.button`
+  position: relative;
+  background-color: white;
   width: 140px;
   height: 40px;
   border: 4px solid black;
@@ -14,17 +29,6 @@ const ButtonWrapper = styled.div`
   overflow: hidden;
   transition: 135ms ease-in;
   cursor: pointer;
-  
-  span {
-    position: relative;
-    color: black;
-    font-family: "josefinsans-semibold", sans-serif;
-    text-decoration: none;
-    font-size: ${(props) => props.size ? props.size : 16}px;
-    z-index: 1;
-    cursor: pointer;
-    transition: 275ms ease-out;
-  }
   
   &:after {
     content: '';
@@ -41,7 +45,7 @@ const ButtonWrapper = styled.div`
   }
   
   &:hover {
-    span {
+    ${ButtonWrapper} {
       letter-spacing: .7px;
       transition: 75ms ease-in;
     }  
@@ -57,9 +61,11 @@ class Button extends Component {
   render() {
     const { size, children, className, onClick } = this.props;
     return (
-      <ButtonWrapper onClick={onClick} className={className} size={size}>
-        <span>{children}</span>
-      </ButtonWrapper>
+      <ButtonStyled {...this.props} onClick={onClick} className={className} size={size}>
+        <ButtonWrapper>
+          {children}
+        </ButtonWrapper>
+      </ButtonStyled>
     );
   }
 }

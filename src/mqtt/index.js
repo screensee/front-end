@@ -11,7 +11,7 @@ client.on('connect', function () {
 });
 
 client.on('message', function (topic, messageBuffer) {
-  const message = messageBuffer.toString();
+  // const message = messageBuffer.toString();
   // console.log(message);
 });
 

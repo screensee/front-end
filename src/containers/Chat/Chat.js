@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import styled, { css } from 'styled-components'
 import ChatIcon from '../../assets/dialogue.svg';
 import UserIcon from "../../components/UserIcon";
+import Button from "../../components/Button";
 
 const ChatWrapper = styled.div`
   display: flex;
@@ -60,6 +61,11 @@ const MessagesWrap = styled.div`
   width: 100%;
 `;
 
+const MessagesArray = styled.div`
+  height: 100%;
+  width: 100%;
+`;
+
 const SingleMessage = styled.div`
   display: flex;
   align-items: flex-start;
@@ -73,18 +79,47 @@ const Message = styled.div`
   text-align: left;
   margin-left: 10px;
   margin-top: 3px;
+  overflow-wrap: break-word;
+  width: 170px;
 `;
 
 const InputWrap = styled.textarea`
   width: 100%;
   border: 0;
-  border-top: 2px solid black;
   height: 70px;
   outline: none;
   padding: 5px 7px;
   resize: none;
   font-family: "josefinsans-semibold", sans-serif;
   flex-shrink: 0;
+  
+  ${(props) => props.isMobile && css`
+    width: calc(100% - 50px);
+  `};
+`;
+
+const FormWrap = styled.form`
+  border-top: 2px solid black;
+  width: 100%;
+  height: 70px;
+  display: flex;
+  flex-shrink: 0;
+`;
+
+const StyledButton = styled(Button)`
+    width: 50px;
+    height: 70px;
+    flex-shrink: 0;
+    position: absolute;
+    bottom: -2px;
+    right: 0;
+    border: 0;
+    border-left: 2px solid black;
+    
+    &:after {
+      transform: translate(0, 67px);
+      height: 70px;
+    }
 `;
 
 class Chat extends Component {
@@ -99,6 +134,15 @@ class Chat extends Component {
       expanded: false,
     };
     this.inputRef = null;
+    this.userAgent = navigator.userAgent;
+
+    this.isMobile = Boolean(this.userAgent.match(/Android|iPhone|iPad|Mobile/));
+  }
+
+  componentDidUpdate({ messages }) {
+    if (this.props.messages !== messages) {
+      this.wrapRef.scrollTop = this.arrayRef.offsetHeight;
+    }
   }
 
   toggleExpand = () => this.setState({ expanded: !this.state.expanded });
@@ -107,26 +151,48 @@ class Chat extends Component {
     this.inputRef = ref;
   };
 
-  onInputKey = (event) => {
-    if (event.key === 'Enter') {
+  assignArrayRef = (ref) => {
+    this.arrayRef = ref;
+  };
+
+  assignWrapRef = (ref) => {
+    this.wrapRef = ref;
+  };
+
+  onInputKey = (e) => {
+    if (e.key === 'Enter' && this.inputRef.value && !this.isMobile) {
       this.props.onSendMessage(this.inputRef.value);
     }
   };
 
   onInputClear = (event) => {
-    if (event.key === 'Enter') {
+    if (event.key === 'Enter' && !this.isMobile) {
+      this.inputRef.value = '';
+    }
+  };
+
+  submitMessage = (e) => {
+    e.preventDefault();
+    if (this.inputRef.value) {
+      this.props.onSendMessage(this.inputRef.value);
       this.inputRef.value = '';
     }
   };
 
   renderMessages = () => {
     const { messages } = this.props;
-    return messages.map((mess) => (
-      <SingleMessage key={mess.timestamp}>
-        <UserIcon fromChat name={mess.author} />
-        <Message>{mess.text}</Message>
-      </SingleMessage>
-    ))
+    return (
+      <MessagesArray innerRef={this.assignArrayRef}>
+        {
+          messages.map((mess) => (
+            <SingleMessage key={mess.timestamp}>
+              <UserIcon fromChat name={mess.author} />
+              <Message>{mess.text}</Message>
+            </SingleMessage>
+          ))
+        }
+      </MessagesArray>
+    )
   };
 
   render() {
@@ -135,10 +201,13 @@ class Chat extends Component {
         <VisibleIcon onClick={this.toggleExpand}>
           <img src={ChatIcon} alt="" />
         </VisibleIcon>
-        <MessagesWrap>
+        <MessagesWrap innerRef={this.assignWrapRef}>
           {this.renderMessages()}
         </MessagesWrap>
-        <InputWrap innerRef={this.onInputRef} onKeyDown={this.onInputKey} onKeyUp={this.onInputClear} />
+        <FormWrap onSubmit={this.submitMessage}>
+          <InputWrap isMobils={this.isMobile} placeholder="Start typing..." innerRef={this.onInputRef} onKeyDown={this.onInputKey} onKeyUp={this.onInputClear} />
+          {this.isMobile && <StyledButton type="submit">Send</StyledButton>}
+        </FormWrap>
       </ChatWrapper>
     );
   }

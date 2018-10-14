@@ -81,8 +81,6 @@ class App extends Component {
     makeRequest('post')(createUrl.roomCreate())()
       .then((response) => {
         if (response) {
-          console.log(this);
-          console.log(response);
           this.setState({
             room: response,
           }, () => {
@@ -97,8 +95,6 @@ class App extends Component {
   };
 
   render() {
-    const { roomId } = this.state;
-
     return (
       <Router history={history}>
         <AppWrapper>

@@ -85,18 +85,20 @@ class Room extends PureComponent {
             room,
           });
         });
-        makeRequest('get')(createUrl.messGet(this.props.id))()
+      makeRequest('get')(createUrl.messGet(this.props.id))()
         .then((messages) => {
           this.setState({
             messages,
           });
         })
+    } else if (this.props.room) {
+      roomMqtt.initRoom(this.state.room.id);
+      roomMqtt.addCallback('message', this.onRemoteMessage);
     }
   }
 
   componentDidUpdate(prevProps, prevState) {
     if (!_.isEqual(prevState.room, this.state.room)) {
-      roomMqtt.destroyRoom(this.state.room.id)
       roomMqtt.initRoom(this.state.room.id);
       roomMqtt.addCallback('message', this.onRemoteMessage);
     }
@@ -123,7 +125,6 @@ class Room extends PureComponent {
   }
 
   changeVideo = (id) => {
-    console.log(id);
     this.setState({ videoId: id });
   };
 
@@ -137,7 +138,7 @@ class Room extends PureComponent {
   };
 
   render() {
-    const { videoId } = this.state;
+    const { videoId, room, } = this.state;
     return (
       <RoomWrapper>
         <UserSidebar>
@@ -153,7 +154,7 @@ class Room extends PureComponent {
           //                                     frameBorder="0"
           //                                     allow="autoplay; encrypted-media"
           //                                     allowFullScreen />
-          <Video videoId={videoId} />
+          <Video videoId={videoId} isMaster={_.get(room, 'isMaster', false)} />
         }
 
       </RoomWrapper>

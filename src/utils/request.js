@@ -4,7 +4,13 @@ export default (method = 'get') =>
   (url) =>
     (params = {}) =>
         new Promise((resolve, reject) => {
-          axios[method](url, params, { withCredentials: true })
+          axios({
+            method,
+            url,
+            data: params,
+            withCredentials: true,
+          })
+          // axios[method](url, params, { withCredentials: true })
             .then((response) => {
               resolve(response.data.data);
             })

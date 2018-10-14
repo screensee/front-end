@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import styled, { css } from 'styled-components'
 import ChatIcon from '../../assets/dialogue.svg';
 import UserIcon from "../../components/UserIcon";
@@ -80,6 +81,11 @@ const InputWrap = styled.textarea`
 `;
 
 class Chat extends Component {
+  static propTypes = {
+    onSendMessage: PropTypes.function.isRequired,
+    messages: PropTypes.array.isRequired,
+  };
+
   constructor() {
     super();
     this.state = {
@@ -89,29 +95,28 @@ class Chat extends Component {
 
   toggleExpand = () => this.setState({ expanded: !this.state.expanded });
 
+  onSendMessage = () => {
+    this.props.onSendMessage();
+  }
+
+  renderMessages = () => {
+    const { messages } = this.props;
+    return messages.map((mess) => (
+      <SingleMessage key={mess.timestamp}>
+        <UserIcon fromChat name={mess.author} />
+        <Message>{mess.text}</Message>
+      </SingleMessage>
+    ))
+  };
+
   render() {
     return (
       <ChatWrapper expanded={this.state.expanded}>
         <VisibleIcon onClick={this.toggleExpand}>
-          <img src={ChatIcon} alt=""/>
+          <img src={ChatIcon} alt="" />
         </VisibleIcon>
         <MessagesWrap>
-          <SingleMessage>
-            <UserIcon fromChat name="Broman"/>
-            <Message>Some absolutely random message</Message>
-          </SingleMessage>
-          <SingleMessage>
-            <UserIcon fromChat name="Yurii"/>
-            <Message>Some absolutely random message but a bit longer</Message>
-          </SingleMessage>
-          <SingleMessage>
-            <UserIcon fromChat name="David"/>
-            <Message>Some absolutely random message but really really really really really really really really long message </Message>
-          </SingleMessage>
-          <SingleMessage>
-            <UserIcon fromChat name="Roman"/>
-            <Message>And again some absolutely random message</Message>
-          </SingleMessage>
+          {this.renderMessages()}
         </MessagesWrap>
         <InputWrap />
       </ChatWrapper>

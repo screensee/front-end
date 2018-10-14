@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
+import PropTypes from 'prop-types';
 import styled, { keyframes } from 'styled-components'
 import Button from '../../components/Button';
 import visibility from '../../assets/visibility.svg';
@@ -192,7 +193,11 @@ const ModalTitle = styled.span`
     font-family: "josefinsans-regular",sans-serif;
 `;
 
-class Home extends Component {
+class Home extends PureComponent {
+  static propTypes = {
+    onCreateRoom: PropTypes.func.isRequired,
+    onConnectRoom: PropTypes.func.isRequired,
+  }
   constructor(props) {
     super(props);
     this.state = {
@@ -211,15 +216,15 @@ class Home extends Component {
     return (
       <HomeWrapper>
         <IconBg>
-          <img src={videoPlayer} alt=""/>
-          <img src={dialogue} alt=""/>
-          <img src={dialogue} alt=""/>
-          <img src={question} alt=""/>
-          <img src={question} alt=""/>
+          <img src={videoPlayer} alt="" />
+          <img src={dialogue} alt="" />
+          <img src={dialogue} alt="" />
+          <img src={question} alt="" />
+          <img src={question} alt="" />
         </IconBg>
         <HomeLayout>
           <TitleWrapper>
-            <img src={visibility} alt=""/>
+            <img src={visibility} alt="" />
             <HomeTitle>Share, Learn, Chat</HomeTitle>
             <HomeSubTitle>become smarter and have fun</HomeSubTitle>
           </TitleWrapper>
@@ -236,7 +241,7 @@ class Home extends Component {
               <ModalTitle>Create form:</ModalTitle>
               <ModalInput placeholder="your name" />
               <ModalInput placeholder="create password" />
-              <StyledModalButton>Create</StyledModalButton>
+              <StyledModalButton onClick={this.props.onCreateRoom}>Create</StyledModalButton>
             </ModalContent>
           </Modal>
         }
@@ -247,7 +252,7 @@ class Home extends Component {
               <ModalTitle>Connect form:</ModalTitle>
               <ModalInput placeholder="your name" />
               <ModalInput placeholder="enter password" />
-              <StyledModalButton>Connect</StyledModalButton>
+              <StyledModalButton onClick={this.props.onConnectRoom}>Connect</StyledModalButton>
             </ModalContent>
           </Modal>
         }

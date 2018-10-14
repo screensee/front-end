@@ -9,4 +9,15 @@ iframe#player {
   min-width: 768px;
   min-height: 432px;
   transform: translate(-50%, -50%);
+
+
+}
+
+@media screen and (max-width: 768px) {
+  iframe#player {
+    width: 80vw;
+    height: calc(80vw / 16 * 9);
+    min-width: 320px;
+    min-height: 180px;
+  }
 }

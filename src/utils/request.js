@@ -19,11 +19,12 @@ export default (method = 'get') =>
             });
         });
 
-const baseUrl = process.env.NODE_ENV === 'development' ? 'http://localhost:3001' : '/b';
+const baseUrl = process.env.NODE_ENV === 'development' ? 'http://185.143.145.119:3001' : '/b';
 export const createUrl = {
   userInit: () => `${baseUrl}/users/init`,
   roomCreate: () => `${baseUrl}/rooms/create`,
   roomJoin: (roomId) => `${baseUrl}/rooms/join/${roomId}`,
   messGet: (roomId) => `${baseUrl}/mess/${roomId}`,
   messPost: () => `${baseUrl}/mess/post`,
+  exitRoom: (roomId) => `${baseUrl}/rooms/exit/${roomId}`
 };

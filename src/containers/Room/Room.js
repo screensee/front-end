@@ -26,6 +26,7 @@ const UserSidebar = styled.div`
   left: 10px;
   top: calc(50% + 40px);
   transform: translate(0, -50%);
+  z-index: 1;
 `;
 
 const StyledUserIcon = styled(UserIcon)`
@@ -50,11 +51,11 @@ class Room extends PureComponent {
   static propTypes = {
     room: PropTypes.object,
     id: PropTypes.string.isRequired,
-  }
+  };
 
   static defaultProps = {
     room: null,
-  }
+  };
 
   static getDerivedStateFromProps(nextProps, prevState) {
     let result = null;
@@ -77,6 +78,8 @@ class Room extends PureComponent {
   }
 
   componentDidMount() {
+    window.addEventListener("beforeunload", this.exitRoom, false);
+
     if (!this.props.room && this.props.id) {
       makeRequest('post')(createUrl.roomJoin(this.props.id))()
         .then((room) => {
@@ -85,12 +88,12 @@ class Room extends PureComponent {
             room,
           });
         });
-        makeRequest('get')(createUrl.messGet(this.props.id))()
-        .then((messages) => {
-          this.setState({
-            messages,
-          });
-        })
+      makeRequest('get')(createUrl.messGet(this.props.id))()
+      .then((messages) => {
+        this.setState({
+          messages,
+        });
+      });
     }
   }
 
@@ -102,6 +105,11 @@ class Room extends PureComponent {
     }
   }
 
+  componentWillUnmount() {
+    makeRequest('post')(createUrl.exitRoom(this.state.room.id))();
+    window.removeEventListener("beforeunload", this.exitRoom, false);
+  }
+
   onRemoteMessage = (message) => {
     this.setState((state) => ({
       messages: [
@@ -109,7 +117,11 @@ class Room extends PureComponent {
         message,
       ]
     }))
-  }
+  };
+
+  exitRoom = () => {
+    makeRequest('post')(createUrl.exitRoom(this.state.room.id))();
+  };
 
   onSendMessage = (text) => {
     this.sendMessage({
@@ -120,7 +132,7 @@ class Room extends PureComponent {
       //   messages,
       // })
     });
-  }
+  };
 
   changeVideo = (id) => {
     console.log(id);

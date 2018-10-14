@@ -3,7 +3,6 @@ import { Router, Route, Link } from 'react-router-dom';
 import styled from 'styled-components';
 import Home from '../Home';
 import Room from '../Room';
-import Button from '../../components/Button';
 import makeRequest, { createUrl } from '../../utils/request';
 import history from '../../utils/history';
 import '../../mqtt'; // init mqtt
@@ -41,6 +40,10 @@ const AppHeader = styled.header`
   padding: 20px 50px;
   box-shadow: 0 0 20px 3px rgba(0,0,0,.45);
   z-index: 5;
+  
+  @media screen and (max-width: 768px) {
+    padding: 20px 20px;
+  }
 `;
 
 const Logo = styled.div`
@@ -62,10 +65,6 @@ const LogoLink = styled(Link)`
 const AppHeadRight = styled.div`
   display: flex;
   align-items: center;
-`;
-
-const StyledLink = styled(Link)`
-  margin-right: 30px;
 `;
 
 class App extends Component {
@@ -92,13 +91,11 @@ class App extends Component {
       });
   };
 
-  onConnectRoom = () => {
-
+  onConnectRoom = (inputValue) => {
+    history.push(`/room/${inputValue}`);
   };
 
   render() {
-    const { roomId } = this.state;
-
     return (
       <Router history={history}>
         <AppWrapper>
@@ -107,12 +104,6 @@ class App extends Component {
               <Logo>Screen<span>See</span></Logo>
             </LogoLink>
             <AppHeadRight>
-              <StyledLink to="/">
-                <Button>Home</Button>
-              </StyledLink>
-              <Link to="/room">
-                <Button>Room</Button>
-              </Link>
             </AppHeadRight>
           </AppHeader>
           <AppMain>

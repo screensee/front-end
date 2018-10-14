@@ -46,6 +46,10 @@ const IconBg = styled.div`
   img {
     position: absolute;
     width: 150px;
+    @media screen and (max-width: 768px) {
+      width: 100px;
+    }
+    
     &:nth-child(1) {
       top: 35%;
       right: -50px;
@@ -86,6 +90,10 @@ const InputWrap = styled.div`
   align-items: center;
   flex-wrap: wrap;
   width: 420px;
+  
+  @media screen and (max-width: 768px) {
+    width: 340px;
+  }
 `;
 
 const TitleWrapper = styled.div`
@@ -94,6 +102,10 @@ const TitleWrapper = styled.div`
   align-items: center;
   flex-direction: column;
   margin-bottom: 50px;
+  
+  @media screen and (max-width: 768px) {
+    margin-bottom: 30px;
+  }
   
   img {
     position: absolute;
@@ -111,6 +123,10 @@ const HomeTitle = styled.div`
   font-size: 64px;
   text-transform: uppercase;
   color: black;
+  
+  @media screen and (max-width: 768px) {
+    font-size: 32px;
+  }
 `;
 
 const HomeSubTitle = styled.div`
@@ -118,6 +134,10 @@ const HomeSubTitle = styled.div`
   font-size: 32px;
   text-transform: lowercase;
   color: black;
+  
+  @media screen and (max-width: 768px) {
+    font-size: 22px;
+  }
 `;
 
 const HomeInput = styled.input`
@@ -131,11 +151,19 @@ const HomeInput = styled.input`
   font-family: 'josefinsans-semibold', sans-serif;
   outline: none;
   text-align: center;
+  
+  @media screen and (max-width: 768px) {
+    width: 190px;
+  }
 `;
 
 const StyledButton = styled(Button)`
   width: 420px;
   margin-top: 10px;
+  
+  @media screen and (max-width: 768px) {
+    width: 340px;
+  }
 `;
 
 const StyledModalButton = styled(Button)`
@@ -197,7 +225,7 @@ class Home extends PureComponent {
   static propTypes = {
     onCreateRoom: PropTypes.func.isRequired,
     onConnectRoom: PropTypes.func.isRequired,
-  }
+  };
   constructor(props) {
     super(props);
     this.state = {
@@ -252,7 +280,7 @@ class Home extends PureComponent {
               <ModalTitle>Connect form:</ModalTitle>
               <ModalInput placeholder="your name" />
               <ModalInput placeholder="enter password" />
-              <StyledModalButton onClick={this.props.onConnectRoom}>Connect</StyledModalButton>
+              <StyledModalButton onClick={() => this.props.onConnectRoom(this.connectInput.value)}>Connect</StyledModalButton>
             </ModalContent>
           </Modal>
         }

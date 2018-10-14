@@ -39,6 +39,11 @@ const VisibleIcon = styled.div`
   padding: 5px 5px 1px;
   cursor: pointer;
   box-shadow: -2px 0 20px 2px rgba(0,0,0,.45);
+  
+  @media screen and (max-width: 768px) {
+    transform: translateY(0);
+    top: -3px;
+  }
 
   img {
     width: 50px;
@@ -90,7 +95,7 @@ class Chat extends Component {
     super();
     this.state = {
       expanded: false,
-    }
+    };
     this.inputRef = null;
   }
 
@@ -98,18 +103,14 @@ class Chat extends Component {
 
   onInputRef = (ref) => {
     this.inputRef = ref;
-  }
+  };
 
   onInputKey = (event) => {
     if (event.key === 'Enter') {
       this.props.onSendMessage(this.inputRef.value);
       this.inputRef.value = '';
     }
-  }
-
-  onSendMessage = () => {
-    this.props.onSendMessage();
-  }
+  };
 
   renderMessages = () => {
     const { messages } = this.props;

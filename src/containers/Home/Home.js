@@ -242,6 +242,14 @@ class Home extends PureComponent {
 
   toggleCreateModal = () => this.setState({ createModal: !this.state.createModal });
 
+  onModalCreateClick = () => {
+    this.props.onCreateRoom({
+      name: this.modalNameRef.value,
+      roomName: this.modalRoomNameRef.value,
+      videoLink: this.modalVideoLinkRef.value,
+    })
+  }
+
   render() {
     const { createModal, connectModal } = this.state;
 
@@ -261,7 +269,7 @@ class Home extends PureComponent {
             <HomeSubTitle>become smarter and have fun</HomeSubTitle>
           </TitleWrapper>
           <InputWrap>
-            <HomeInput innerRef={(ref) => this.connectInput = ref } placeholder="insert room id or click create room" />
+            <HomeInput innerRef={(ref) => this.connectInput = ref} placeholder="insert room id or click create room" />
             <Button onClick={this.toggleConnectModal}>Connect</Button>
             <StyledButton onClick={this.toggleCreateModal}>Create room</StyledButton>
           </InputWrap>
@@ -271,10 +279,14 @@ class Home extends PureComponent {
             <ModalBg onClick={this.toggleCreateModal} />
             <CreateModalContent>
               <ModalTitle>Create form:</ModalTitle>
-              <ModalInput placeholder="your name" />
-              <ModalInput placeholder="room name" />
-              <ModalInput placeholder="youtube link" />
-              <StyledModalButton onClick={this.props.onCreateRoom}>Create</StyledModalButton>
+              <ModalInput placeholder="your name" innerRef={(ref) => { this.modalNameRef = ref }} />
+              <ModalInput placeholder="room name" innerRef={(ref) => { this.modalRoomNameRef = ref }} />
+              <ModalInput
+                placeholder="youtube link"
+                innerRef={(ref) => { this.modalVideoLinkRef = ref }}
+                defaultValue="https://www.youtube.com/watch?v=xBaiNoXOZOo"
+              />
+              <StyledModalButton onClick={this.onModalCreateClick}>Create</StyledModalButton>
             </CreateModalContent>
           </Modal>
         }

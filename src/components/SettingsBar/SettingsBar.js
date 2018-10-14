@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import styled, { css } from 'styled-components'
-import queryString from 'query-string';
 import Button from "../Button";
 import SettingsIcon from "../../assets/settings.svg";
 
@@ -72,18 +71,8 @@ class SettingsBar extends Component {
 
   onClick = () => {
     if (this.videoInput) {
-      const {value} = this.videoInput;
-      const splitted = value.split('?');
-      if (splitted.length > 1) {
-        const params = queryString.parse(splitted[1]);
-        if (params.v) {
-          this.props.changeVideo(params.v)
-          this.toggleExpand();
-        }
-      } else {
-        this.props.changeVideo(value); // assume that this is video id
-        this.toggleExpand();
-      }
+      this.props.changeVideo(this.videoInput.value)
+      this.toggleExpand();
     }
   };
 
@@ -91,9 +80,9 @@ class SettingsBar extends Component {
     return (
       <SettingsBarWrapper expanded={this.state.expanded}>
         <VisibleIcon onClick={this.toggleExpand}>
-          <img src={SettingsIcon} alt=""/>
+          <img src={SettingsIcon} alt="" />
         </VisibleIcon>
-        <SettingsInput innerRef={this.onInputeRef} placeholder="insert video link"  defaultValue="https://www.youtube.com/watch?v=xBaiNoXOZOo"/>
+        <SettingsInput innerRef={this.onInputeRef} placeholder="insert video link" defaultValue={this.props.defaultUrl} />
         <Button onClick={this.onClick}>Set Video</Button>
       </SettingsBarWrapper>
     );

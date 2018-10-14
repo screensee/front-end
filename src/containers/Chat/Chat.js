@@ -161,6 +161,7 @@ class Chat extends Component {
 
   onInputKey = (e) => {
     if (e.key === 'Enter' && this.inputRef.value && !this.isMobile) {
+      event.preventDefault();
       this.props.onSendMessage(this.inputRef.value);
     }
   };

@@ -5,6 +5,7 @@ import Home from '../Home';
 import Room from '../Room';
 import makeRequest, { createUrl } from '../../utils/request';
 import history from '../../utils/history';
+import eye from '../../assets/visibility.svg';
 import '../../mqtt'; // init mqtt
 
 const AppWrapper = styled.div`
@@ -37,12 +38,12 @@ const AppHeader = styled.header`
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  padding: 20px 50px;
+  padding: 0 50px;
   box-shadow: 0 0 20px 3px rgba(0,0,0,.45);
   z-index: 5;
   
   @media screen and (max-width: 768px) {
-    padding: 20px 20px;
+    padding: 0 20px;
   }
 `;
 
@@ -60,11 +61,16 @@ const Logo = styled.div`
 const LogoLink = styled(Link)`
   cursor: pointer;
   text-decoration: none;
+  margin: 20px 0;
 `;
 
 const AppHeadRight = styled.div`
   display: flex;
   align-items: center;
+  
+  img {
+    height: 50px;
+  }
 `;
 
 class App extends Component {
@@ -118,6 +124,7 @@ class App extends Component {
               <Logo>Screen<span>See</span></Logo>
             </LogoLink>
             <AppHeadRight>
+              <img src={eye} alt=""/>
             </AppHeadRight>
           </AppHeader>
           <AppMain>

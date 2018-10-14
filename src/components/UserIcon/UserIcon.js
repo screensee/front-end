@@ -29,7 +29,7 @@ class UserIcon extends Component {
 
     return (
       <UserIconWrapper fromChat={fromChat} className={className}>
-        <Name>{name[0].toUpperCase()}</Name>
+        <Name>{name? name[0].toUpperCase() : 'XX'}</Name>
         {img && <img src={img} alt=""/>}
       </UserIconWrapper>
     );

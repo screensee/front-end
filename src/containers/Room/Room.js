@@ -173,7 +173,7 @@ class Room extends PureComponent {
       <RoomWrapper>
         <UserSidebar>
           {this.renderUserIcons()}
-          <MoreUsers>...</MoreUsers>
+          {false && <MoreUsers>...</MoreUsers>}
         </UserSidebar>
         <Chat onSendMessage={this.onSendMessage} messages={this.state.messages} />
         <SettingsBar changeVideo={this.changeVideo} defaultUrl={_.get(room, 'videoLink')} />

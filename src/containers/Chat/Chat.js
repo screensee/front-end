@@ -29,6 +29,10 @@ const ChatWrapper = styled.div`
     transform: translate(0, -50%);
     transition: 135ms ease-in;
   `};
+  
+  @media screen and (max-width: 768px) {
+    top: calc(40% + 34px);
+  }
 `;
 
 const VisibleIcon = styled.div`

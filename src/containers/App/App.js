@@ -80,8 +80,6 @@ class App extends Component {
     makeRequest('post')(createUrl.roomCreate())()
       .then((response) => {
         if (response) {
-          console.log(this);
-          console.log(response);
           this.setState({
             room: response,
           }, () => {

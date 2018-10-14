@@ -12,7 +12,7 @@ client.on('connect', function () {
 
 client.on('message', function (topic, messageBuffer) {
   const message = messageBuffer.toString();
-  console.log(message);
+  // console.log(message);
 });
 
 export default client;

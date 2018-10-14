@@ -6,7 +6,17 @@ let roomId;
 export default {
   initRoom: (id) => {
     roomId = id
-    client.subscribe(`room/${roomId}/#`);
+    if (client.connected) {
+      client.subscribe(`room/${roomId}/#`, (err, data) => {
+        console.log(err, data);
+      });
+    } else {
+      client.on('connect', () => {
+        client.subscribe(`room/${roomId}/#`, (err, data) => {
+          console.log(err, data);
+        });
+      });
+    }
     client.on('message', onRoomMessage);
   },
   addCallback: (subTopic, cb) => {
@@ -18,9 +28,12 @@ export default {
   },
   destroyRoom: (id) => {
     callbacks = {};
-    client.subscribe(`room/${roomId}/#`);
+    client.unsubscribe(`room/${roomId}/#`);
     client.removeListener('message', onRoomMessage);
-  }
+  },
+  sendPlaybackInfo: (topic, data) => {
+    client.publish(`room/${roomId}/${topic}`, data.toString());
+  },
 }
 
 function onRoomMessage(topic, messageBuffer) {
